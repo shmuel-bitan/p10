@@ -21,7 +21,8 @@ from API import views
 from authentication import views as auth_views
 
 urlpatterns = [
-
+    path('users/', auth_views.UserListCreateView.as_view(), name='users-list'),
+    path('user/<int:pk>/', auth_views.UserDetailView.as_view(), name='user-details'),
     path('login/', auth_views.LoginView.as_view(), name='login'),
     path('signup/', auth_views.SignupView.as_view(), name='signup'),
     path('admin/', admin.site.urls),
