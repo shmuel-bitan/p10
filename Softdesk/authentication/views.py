@@ -1,11 +1,10 @@
 from rest_framework import generics
-from .models import User
+from .models import User, check_password_django
 from .serializers import UserSerializer
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import AccessToken
-from .models import User
 from .serializers import UserSerializer
 
 
@@ -19,15 +18,24 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 class LoginView(APIView):
     def post(self, request):
-        # Votre logique pour valider les informations de connexion de l'utilisateur
-        user = User.objects.filter(email=request.data.get('email')).first()
-        if user is not None and user.check_password(request.data.get('password')):
-            # Si les informations sont valides, générer un token JWT
-            access_token = AccessToken.for_user(user)
-            return Response({'access_token': str(access_token)}, status=status.HTTP_200_OK)
+        # Get the email and password from the request data
+        email = request.data.get('email')
+        password = request.data.get('password')
+
+        # Check if both email and password are provided
+        if not email or not password:
+            return Response({'error': 'Email and password are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Try to get the user from the database using the provided email
+        user = User.objects.filter(email=email).first()
+        # Check if the user exists and the password is correct
+        if user is not None:
+            if user.check_password_django(password):
+                # If the credentials are valid, generate an access token for the user
+                access_token = AccessToken.for_user(user)
+                return Response({'access_token': str(access_token)}, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-
 class SignupView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
