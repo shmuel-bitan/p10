@@ -19,6 +19,16 @@ from django.contrib import admin
 from django.urls import path , include
 from API import views
 from authentication import views as auth_views
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from API.views import ProjectViewSet, ContributorViewSet, IssueViewSet, CommentViewSet
+
+# Create a router and register viewsets with it
+router = DefaultRouter()
+router.register(r'projects', ProjectViewSet, basename='project')
+router.register(r'contributors', ContributorViewSet, basename='contributor')
+router.register(r'issues', IssueViewSet, basename='issue')
+router.register(r'comments', CommentViewSet, basename='comment')
 
 urlpatterns = [
     path('users/', auth_views.UserListCreateView.as_view(), name='users-list'),
@@ -27,12 +37,5 @@ urlpatterns = [
     path('signup/', auth_views.SignupView.as_view(), name='signup'),
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('contributors/', views.ContributorListCreateView.as_view(), name='contributor-list'),
-    path('contributors/<int:pk>/', views.ContributorDetailView.as_view(), name='contributor-detail'),
-    path('projects/', views.ProjectListCreateView.as_view(), name='project-list'),
-    path('projects/<int:pk>/', views.ProjectDetailView.as_view(), name='project-detail'),
-    path('issues/', views.IssueListCreateView.as_view(), name='issue-list'),
-    path('issues/<int:pk>/', views.IssueDetailView.as_view(), name='issue-detail'),
-    path('comments/', views.CommentListCreateView.as_view(), name='comment-list'),
-    path('comments/<int:pk>/', views.CommentDetailView.as_view(), name='comment-detail'),
+
 ]

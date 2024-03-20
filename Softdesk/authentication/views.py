@@ -1,5 +1,5 @@
 from rest_framework import generics
-from .models import User, check_password_django
+from .models import User
 from .serializers import UserSerializer
 from rest_framework import status
 from rest_framework.views import APIView
@@ -30,7 +30,7 @@ class LoginView(APIView):
         user = User.objects.filter(email=email).first()
         # Check if the user exists and the password is correct
         if user is not None:
-            if user.check_password_django(password):
+            if user.check_hashed_password(password):
                 # If the credentials are valid, generate an access token for the user
                 access_token = AccessToken.for_user(user)
                 return Response({'access_token': str(access_token)}, status=status.HTTP_200_OK)
@@ -45,3 +45,5 @@ class SignupView(APIView):
             access_token = AccessToken.for_user(user)
             return Response({'access_token': str(access_token)}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
