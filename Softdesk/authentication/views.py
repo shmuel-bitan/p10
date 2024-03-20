@@ -40,7 +40,7 @@ class SignupView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
+            user = serializer.create(serializer)
             # Après l'inscription, générer un token JWT pour l'utilisateur
             access_token = AccessToken.for_user(user)
             return Response({'access_token': str(access_token)}, status=status.HTTP_201_CREATED)

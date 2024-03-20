@@ -3,7 +3,12 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from .validators import validate_age
 import bcrypt
 
-
+class UserManager(BaseUserManager):
+    def create_user(self,email,username,age,can_be_contacted,can_be_shared,created_time,is_active, password):
+        password_hashed =  password.encode('utf-8')
+        password_final = bcrypt.hashpw(password_hashed, bcrypt.gensalt())
+        user = User(email,username,age,can_be_contacted,can_be_shared,created_time,is_active,password_final)
+        user.save(using=self._db)
 
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True, verbose_name='Adresse email')
