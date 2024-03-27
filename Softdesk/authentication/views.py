@@ -4,7 +4,6 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import AccessToken
 from .models import User
 from .serializers import UserSerializer
-import bcrypt
 
 
 class UserListCreateView(generics.ListCreateAPIView):
@@ -29,12 +28,9 @@ class LoginView(APIView):
 
         # Try to get the user from the database using the provided email
         user = User.objects.filter(email=email).first()
-        raw_password = password.encode('utf-8')
-        pswd = user.password
-
-        print(raw_password)
+        print(user)
         # Check if the user exists and the password is correct
-        if user is not None and bcrypt.checkpw(raw_password, pswd.encode('utf-8')):
+        if user is not None and user.check_hashed_password(password):
             # If the credentials are valid, generate an access token for the user
             access_token = AccessToken.for_user(user)
             return Response({'access_token': str(access_token)}, status=status.HTTP_200_OK)

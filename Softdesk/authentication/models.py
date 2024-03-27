@@ -6,7 +6,8 @@ from django.contrib.auth.models import BaseUserManager
 
 
 class UserManager(BaseUserManager):
-    def create_user(self, email, username, age, can_be_contacted, can_data_be_shared, created_time, is_active, password=None, **extra_fields):
+    def create_user(self, email, username, age, can_be_contacted, can_data_be_shared, created_time, is_active,
+                    password=None, **extra_fields):
         if not email:
             raise ValueError('The Email field must be set')
         email = self.normalize_email(email)
@@ -23,6 +24,8 @@ class UserManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
         return user
+
+
 class User(AbstractBaseUser):
     email = models.EmailField(unique=True, verbose_name='Adresse email')
     username = models.CharField(max_length=150, unique=True, blank=True, null=True, verbose_name='Nom d\'utilisateur')
@@ -39,13 +42,15 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.email
-    def create_user(self):
 
+    def create_user(self):
         self.password = self.password.encode('utf-8')
         self.password = bcrypt.hashpw(self.password, bcrypt.gensalt())
         self.save(using=self._db)
+
     def check_hashed_password(self, raw_password):
         raw_password = raw_password.encode('utf-8')
+        print(raw_password)
         return bcrypt.checkpw(raw_password, self.password.encode('utf-8'))
 
     def __str__(self):
