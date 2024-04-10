@@ -6,17 +6,14 @@ Softdesk is a development and collaboration software publisher that has released
 
 The Softdesk Issue Tracking API provides a set of endpoints for managing projects, issues, comments, and contributors within an issue tracking system. It allows users to create and manage projects, assign issues to contributors, leave comments on issues, and more.
 
-## Installation
-
-1. Clone the repository: `git clone https://github.com/your-repo/softdesk-api.git`
-2. Navigate to the project directory: `cd softdesk-api`
-3. Create a virtual environment: `python -m venv env`
-4. Activate the virtual environment:
-   - On Windows: `env\Scripts\activate`
-   - On Unix or Linux: `source env/bin/activate`
-5. Install the required packages: `pip install -r requirements.txt`
-6. Set up the database (e.g., run migrations if using Django)
-7. Start the development server: `python manage.py runserver`
+Installation
+Clone the repository: git clone https://github.com/your-repo/softdesk-api.git
+Navigate to the project directory: cd softdesk-api
+Create a virtual environment using pipenv: pipenv install
+Activate the virtual environment: pipenv shell
+Install the required packages: pipenv install -r requirements.txt
+Set up the database (e.g., run migrations if using Django)
+Start the development server: python manage.py runserver
 
 ## API Documentation
 
